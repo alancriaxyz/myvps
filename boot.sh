@@ -30,17 +30,6 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Update system and install git
-log_info "Updating system packages..."
-apt-get update
-apt-get upgrade -y
-
-# Install git if not installed
-if ! command -v git &> /dev/null; then
-    log_info "Installing git..."
-    apt-get install -y git
-fi
-
 # Clone repository
 log_info "Cloning MyVPS repository..."
 
@@ -64,6 +53,10 @@ else
         exit 1
     fi
 fi
+
+# Run system update script
+log_info "Running system update..."
+bash myvps/config/update.sh
 
 # Define configuration functions
 prompt_email() {
