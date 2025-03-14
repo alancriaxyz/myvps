@@ -84,12 +84,6 @@ if [ -f "myvps/config/settings.sh" ]; then
         prompt_email
     }
 
-    save_settings() {
-        # Export again to ensure it's in the environment
-        export MYVPS_EMAIL
-        log_info "Email variable confirmed in environment: $MYVPS_EMAIL"
-    }
-
     replace_variables() {
         local file="$1"
         local temp_file=$(mktemp)
@@ -115,7 +109,6 @@ fi
 # Prompt for configuration
 log_info "Please provide configuration details..."
 prompt_email
-save_settings
 
 # Configure files with the provided settings
 configure_files
