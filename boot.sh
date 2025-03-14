@@ -44,12 +44,11 @@ fi
 # Clone or update repository
 log_info "Cloning/updating repository..."
 REPO_URL="https://github.com/alancriaxyz/myvps.git"
-INSTALL_DIR="/root/myvps/"
+INSTALL_DIR="/root/myvps"
 
 if [ -d "$INSTALL_DIR" ]; then
     cd "$INSTALL_DIR"
-    git fetch origin
-    git reset --hard origin/main
+    git pull origin main
     log_info "Repository updated successfully"
 else
     git clone "$REPO_URL" "$INSTALL_DIR"
