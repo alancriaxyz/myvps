@@ -43,7 +43,6 @@ fi
 
 # Clone repository
 log_info "Cloning MyVPS repository..."
-log_info "Current directory before clone: $(pwd)"
 
 # Check if myvps directory exists
 if [ -d "myvps" ]; then
@@ -71,12 +70,13 @@ if [ -f "myvps/config/settings.sh" ]; then
     # Define as funções diretamente aqui para evitar problemas com source
     prompt_email() {
         echo "Please enter your email address for SSL certificates and notifications"
-        read -p "Email: " MYVPS_EMAIL
+        read -p "Email: " email_input
         
         # Validação simplificada de email
-        if [[ "$MYVPS_EMAIL" == *"@"*"."* ]]; then
-            echo "Email accepted: $MYVPS_EMAIL"
-            export MYVPS_EMAIL
+        if [[ "$email_input" == *"@"*"."* ]]; then
+            echo "Email accepted: $email_input"
+            export MYVPS_EMAIL="$email_input"
+            log_info "Email variable set: $MYVPS_EMAIL"
             return 0
         fi
         echo "Invalid email format. Please try again."
@@ -91,6 +91,9 @@ if [ -f "myvps/config/settings.sh" ]; then
 # MyVPS Configuration Settings
 export MYVPS_EMAIL="$MYVPS_EMAIL"
 EOF
+        # Source the settings file to ensure variable is available
+        source myvps/config/settings.sh
+        log_info "Settings saved and loaded. Current email: $MYVPS_EMAIL"
     }
 
     replace_variables() {
