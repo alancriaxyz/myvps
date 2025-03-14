@@ -37,6 +37,7 @@ chmod 600 /root/myvps/acme.json
 
 # Start Traefik
 log_info "Starting Traefik service..."
+cd /root/myvps/services/traefik
 docker compose up -d
 
 # Check if Traefik is running
