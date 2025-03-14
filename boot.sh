@@ -57,13 +57,17 @@ else
     log_info "Repository cloned successfully"
 fi
 
+# Run environment configuration
+log_info "Running environment configuration..."
+bash configs/environment.sh
+
 # Install Docker and Docker Compose
 log_info "Installing Docker and Docker Compose..."
 bash services/docker/install.sh
 
-# Run environment configuration
-log_info "Running environment configuration..."
-bash configs/environment.sh
+# Install and configure Traefik
+log_info "Installing and configuring Traefik..."
+bash services/traefik/install.sh
 
 log_info "Installation completed successfully!"
 log_warn "Please reboot your system to apply all changes." 
