@@ -32,7 +32,9 @@ fi
 
 # Create temporary directory
 TEMP_DIR=$(mktemp -d)
+log_info "Created temporary directory: $TEMP_DIR"
 cd "$TEMP_DIR"
+log_info "Current directory: $(pwd)"
 
 # Update system and install git
 log_info "Updating system packages..."
@@ -48,6 +50,8 @@ fi
 # Clone repository
 log_info "Cloning MyVPS repository..."
 git clone https://github.com/alancriaxyz/myvps.git
+log_info "Repository cloned. Current directory contents:"
+ls -la
 
 # Load configuration functions
 if [ -f "myvps/config/settings.sh" ]; then
