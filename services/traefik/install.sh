@@ -32,8 +32,8 @@ fi
 
 # Create acme.json file
 log_info "Creating acme.json file..."
-touch acme.json
-chmod 600 acme.json
+touch /root/myvps/acme.json
+chmod 600 /root/myvps/acme.json
 
 # Start Traefik
 log_info "Starting Traefik service..."
