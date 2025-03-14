@@ -54,6 +54,7 @@ bash services/git/uninstall.sh
 
 # Remove project directory
 log_info "Removing project directory..."
+cd ..
 rm -rf /root/myvps
 
 # Clean unused packages

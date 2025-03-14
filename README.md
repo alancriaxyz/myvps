@@ -42,18 +42,7 @@ sudo reboot
 If you need to remove all components installed by this project, you can use the uninstall script:
 
 ```bash
-cd /root/myvps && sudo ./uninstall.sh
-```
-
-This will remove:
-- Docker and all containers
-- Docker Compose
-- Git
-- All project files
-
-After uninstallation, it's recommended to reboot your system:
-```bash
-sudo reboot
+bash uninstall.sh
 ```
 
 ## 🔒 Security
