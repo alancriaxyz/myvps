@@ -11,12 +11,17 @@ prompt_email() {
     local max_attempts=3
     local attempt=1
     
+    echo "Please enter a valid email address (e.g., user@example.com)"
+    echo "The email will be used for SSL certificates and notifications"
+    
     while [ $attempt -le $max_attempts ]; do
-        read -p "Enter your email for SSL certificates: " EMAIL
-        if [[ "$EMAIL" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+        read -p "Enter your email: " EMAIL
+        # Expressão regular mais permissiva para email
+        if [[ "$EMAIL" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]] || [[ "$EMAIL" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\.[a-zA-Z]{2,}$ ]]; then
             return 0
         fi
-        echo "Invalid email format. Please try again. (Attempt $attempt of $max_attempts)"
+        echo "Invalid email format. Please enter a valid email address (e.g., user@example.com)"
+        echo "Attempt $attempt of $max_attempts"
         ((attempt++))
     done
     
