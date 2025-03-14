@@ -40,7 +40,13 @@ git clone https://github.com/alancriaxyz/myvps.git
 cd myvps
 
 # Load configuration functions
-source config/settings.sh
+if [ -f "config/settings.sh" ]; then
+    # Carrega apenas as funções do arquivo settings.sh
+    source <(grep -v '^#' config/settings.sh | grep -v '^$')
+else
+    log_error "Configuration file not found"
+    exit 1
+fi
 
 # Prompt for configuration
 log_info "Please provide configuration details..."
