@@ -46,7 +46,7 @@ fi
 
 # Remover Docker e containers usando o script específico
 log_info "Removendo Docker e todos os containers..."
-./services/docker/uninstall.sh
+bash services/docker/uninstall.sh
 
 # Remover Git
 log_info "Removendo Git..."
