@@ -1,14 +1,7 @@
 #!/bin/bash
 
-# Docker Environment Setup
-# This script configures the Docker environment including:
-# - Docker Engine installation
-# - Docker Compose installation
-# - Required system packages
-# - User permissions
-# - Directory structure
-
-set -euo pipefail
+# Docker Installation Script
+# This script handles the installation of Docker and Docker Compose
 
 # Color codes for output
 RED='\033[0;31m'
@@ -29,73 +22,62 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if running as root
-if [ "$EUID" -ne 0 ]; then 
-    log_error "Please run as root"
-    exit 1
-fi
+install_docker() {
+    if ! command -v docker &> /dev/null; then
+        log_info "Installing Docker..."
+        
+        # Add Docker's official GPG key
+        apt-get update
+        apt-get install -y ca-certificates curl gnupg
+        install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        chmod a+r /etc/apt/keyrings/docker.gpg
 
-# Function to check if a command exists
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
+        # Add the repository to Apt sources
+        echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+          $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+          tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+        # Install Docker Engine
+        apt-get update
+        apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+        # Start and enable Docker service
+        systemctl start docker
+        systemctl enable docker
+
+        if command -v docker &> /dev/null; then
+            log_info "Docker installed successfully"
+        else
+            log_error "Failed to install Docker"
+            exit 1
+        fi
+    else
+        log_info "Docker is already installed"
+    fi
 }
 
-# Install essential packages for Docker
-log_info "Installing essential packages..."
-apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release \
-    software-properties-common
-
-# Install Docker if not already installed
-if ! command_exists docker; then
-    log_info "Installing Docker..."
-    
-    # Add Docker's official GPG key
-    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
-    # Add Docker repository
-    echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-        $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-    # Install Docker Engine
-    apt-get update
-    apt-get install -y docker-ce docker-ce-cli containerd.io
-
-    # Add current user to docker group
-    if [ -n "$SUDO_USER" ]; then
-        usermod -aG docker "$SUDO_USER"
+install_docker_compose() {
+    if ! command -v docker compose &> /dev/null; then
+        log_info "Installing Docker Compose..."
+        
+        # Docker Compose is now included in docker-compose-plugin
+        if command -v docker compose &> /dev/null; then
+            log_info "Docker Compose installed successfully"
+        else
+            log_error "Failed to install Docker Compose"
+            exit 1
+        fi
+    else
+        log_info "Docker Compose is already installed"
     fi
-else
-    log_info "Docker is already installed"
-fi
+}
 
-# Install Docker Compose if not already installed
-if ! command_exists docker-compose; then
-    log_info "Installing Docker Compose..."
-    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-else
-    log_info "Docker Compose is already installed"
-fi
+# Main execution
+install_docker
+install_docker_compose
 
-# Create Docker environment directories
-log_info "Creating Docker environment directories..."
-mkdir -p /opt/vps-bootstrap/services/docker/{compose,config,data}
-
-# Set proper permissions
-log_info "Setting proper permissions..."
-chown -R root:root /opt/vps-bootstrap/services/docker
-chmod -R 755 /opt/vps-bootstrap/services/docker
-
-# Final status check
-log_info "Checking Docker installation status..."
+# Verify installations
 docker --version
-docker-compose --version
-
-log_info "Docker environment setup completed successfully!"
-log_info "Please reboot your system to apply all changes." 
+docker compose version
