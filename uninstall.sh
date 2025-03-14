@@ -48,9 +48,9 @@ fi
 log_info "Removendo Docker e todos os containers..."
 bash services/docker/uninstall.sh
 
-# Remover Git
+# Remover Git usando o script específico
 log_info "Removendo Git..."
-apt-get remove --purge -y git
+bash services/git/uninstall.sh
 
 # Remover diretório do projeto
 log_info "Removendo diretório do projeto..."
