@@ -44,7 +44,7 @@ fi
 # Clone or update repository
 log_info "Cloning/updating repository..."
 REPO_URL="https://github.com/alancriaxyz/myvps.git"
-INSTALL_DIR="/root/myvps"
+INSTALL_DIR="/root/myvps/"
 
 if [ -d "$INSTALL_DIR" ]; then
     cd "$INSTALL_DIR"
@@ -53,21 +53,20 @@ if [ -d "$INSTALL_DIR" ]; then
     log_info "Repository updated successfully"
 else
     git clone "$REPO_URL" "$INSTALL_DIR"
-    cd "$INSTALL_DIR"
     log_info "Repository cloned successfully"
 fi
 
 # Run environment configuration
 log_info "Running environment configuration..."
-bash configs/environment.sh
+bash /root/myvps/configs/environment.sh
 
 # Install Docker and Docker Compose
 log_info "Installing Docker and Docker Compose..."
-bash services/docker/install.sh
+bash /root/myvps/services/docker/install.sh
 
 # Install and configure Traefik
 log_info "Installing and configuring Traefik..."
-bash services/traefik/install.sh
+bash /root/myvps/services/traefik/install.sh
 
 log_info "Installation completed successfully!"
 log_warn "Please reboot your system to apply all changes." 

@@ -32,6 +32,12 @@ fi
 
 # Configuration functions
 prompt_email() {
+    # Check if email is already set
+    if [ -n "${MYVPS_EMAIL:-}" ]; then
+        log_info "Using existing email: $MYVPS_EMAIL"
+        return 0
+    fi
+
     echo "Please enter your email address for SSL certificates and notifications"
     read -p "Email: " email_input
     
@@ -72,11 +78,6 @@ configure_files() {
         log_warn "Traefik compose file not found: $traefik_compose"
     fi
     
-    # Space for additional configuration files
-    # Example:
-    # if [ -f "/path/to/config/file" ]; then
-    #     replace_variables "/path/to/config/file"
-    # fi
 }
 
 # Main execution
