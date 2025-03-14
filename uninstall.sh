@@ -7,8 +7,8 @@ set -euo pipefail
 
 # Códigos de cores para output
 RED='\033[0;31m'
-YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
 NC='\033[0m' # Sem Cor
 
 # Funções de log
@@ -44,15 +44,9 @@ if [ "$confirmation" != "sim" ]; then
     exit 0
 fi
 
-# Remover Docker e containers
+# Remover Docker e containers usando o script específico
 log_info "Removendo Docker e todos os containers..."
-if command -v docker &> /dev/null; then
-    docker container stop $(docker container ls -aq) 2>/dev/null || true
-    docker system prune -af --volumes
-    apt-get remove --purge -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-    rm -rf /var/lib/docker
-    rm -rf /var/lib/containerd
-fi
+./services/docker/uninstall.sh
 
 # Remover Git
 log_info "Removendo Git..."
@@ -60,6 +54,7 @@ apt-get remove --purge -y git
 
 # Remover diretório do projeto
 log_info "Removendo diretório do projeto..."
+cd ..
 rm -rf /root/myvps
 
 # Limpar pacotes não utilizados
