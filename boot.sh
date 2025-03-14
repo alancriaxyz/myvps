@@ -44,6 +44,13 @@ fi
 # Clone repository
 log_info "Cloning MyVPS repository..."
 log_info "Current directory before clone: $(pwd)"
+
+# Check if myvps directory exists and remove it
+if [ -d "myvps" ]; then
+    log_warn "Directory 'myvps' already exists. Removing it..."
+    rm -rf myvps
+fi
+
 if git clone https://github.com/alancriaxyz/myvps.git; then
     log_info "Clone successful"
 else
