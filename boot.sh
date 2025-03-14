@@ -30,6 +30,13 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Download and run update script
+log_info "Downloading update script..."
+curl -s https://raw.githubusercontent.com/alancriaxyz/myvps/main/config/update.sh -o /tmp/myvps-setup/update.sh
+chmod +x /tmp/myvps-setup/update.sh
+log_info "Running system update..."
+bash /tmp/myvps-setup/update.sh
+
 # Clone repository
 log_info "Cloning MyVPS repository..."
 
@@ -53,10 +60,6 @@ else
         exit 1
     fi
 fi
-
-# Run system update script
-log_info "Running system update..."
-bash myvps/config/update.sh
 
 # Define configuration functions
 prompt_email() {
