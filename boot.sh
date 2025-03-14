@@ -75,8 +75,9 @@ if [ -f "myvps/config/settings.sh" ]; then
         # Validação simplificada de email
         if [[ "$email_input" == *"@"*"."* ]]; then
             echo "Email accepted: $email_input"
+            # Export directly to environment
             export MYVPS_EMAIL="$email_input"
-            log_info "Email variable set: $MYVPS_EMAIL"
+            log_info "Email variable exported: $MYVPS_EMAIL"
             return 0
         fi
         echo "Invalid email format. Please try again."
@@ -84,16 +85,9 @@ if [ -f "myvps/config/settings.sh" ]; then
     }
 
     save_settings() {
-        mkdir -p myvps/config
-        cat > "myvps/config/settings.sh" << EOF
-#!/bin/bash
-
-# MyVPS Configuration Settings
-export MYVPS_EMAIL="$MYVPS_EMAIL"
-EOF
-        # Source the settings file to ensure variable is available
-        source myvps/config/settings.sh
-        log_info "Settings saved and loaded. Current email: $MYVPS_EMAIL"
+        # Export again to ensure it's in the environment
+        export MYVPS_EMAIL
+        log_info "Email variable confirmed in environment: $MYVPS_EMAIL"
     }
 
     replace_variables() {
