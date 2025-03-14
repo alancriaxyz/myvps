@@ -1,0 +1,81 @@
+name: VPS Bootstrap Project
+description: |
+  Project to automate VPS setup with Docker, Traefik, and Portainer.
+  Created by Alan Alves.
+
+# PROJECT VISION
+vision: |
+  A streamlined VPS setup system that:
+  - Automates Docker environment setup
+  - Configures Traefik as reverse proxy
+  - Sets up Portainer for container management
+  - Handles SSL certificates automatically
+  - Configures proper firewall rules
+
+# TECHNICAL STACK
+stack:
+  - Docker and Docker Compose
+  - Traefik for reverse proxy
+  - Portainer for container management
+  - UFW/iptables for firewall
+  - Let's Encrypt for SSL
+  - Bash scripts for automation
+
+# CORE PRINCIPLES
+principles:
+  - Keep scripts modular and reusable
+  - Use clear documentation
+  - Follow security best practices
+  - Make configuration easy to customize
+  - Maintain idempotent scripts
+
+# CODE STYLE
+style:
+  - Use shellcheck for bash scripts
+  - Document all configuration options
+  - Include usage examples
+  - Add error handling
+  - Use meaningful variable names
+
+# FOLDER STRUCTURE
+structure:
+  docker:
+    - Compose files and configurations
+  scripts:
+    - Installation and setup scripts
+  configs:
+    - Default configuration files
+  docs:
+    - Documentation and guides
+
+# NAMING CONVENTIONS
+naming:
+  - Use kebab-case for files and directories
+  - Prefix scripts with purpose (install-, setup-, config-)
+  - Use .sh extension for shell scripts
+  - Use .yml for docker-compose files
+  - Use descriptive names for configuration files
+
+# DOCUMENTATION
+documentation:
+  - README.md in each directory
+  - Setup instructions
+  - Configuration options
+  - Troubleshooting guides
+  - Usage examples
+
+# ENGINEERING GUIDELINES
+guidelines:
+  - Test scripts in clean environment
+  - Validate configurations
+  - Check for dependencies
+  - Handle errors gracefully
+  - Log important operations
+
+# RED FLAGS
+red_flags:
+  - Hardcoded credentials
+  - Unsecured ports or services
+  - Missing error handling
+  - Unclear documentation
+  - Untested scripts
