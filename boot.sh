@@ -42,7 +42,20 @@ if ! command -v git &> /dev/null; then
 fi
 
 # Clone or update repository
-bash scripts/clone.sh
+log_info "Cloning/updating repository..."
+REPO_URL="https://github.com/alancriaxyz/myvps.git"
+INSTALL_DIR="/root/myvps"
+
+if [ -d "$INSTALL_DIR" ]; then
+    cd "$INSTALL_DIR"
+    git fetch origin
+    git reset --hard origin/main
+    log_info "Repository updated successfully"
+else
+    git clone "$REPO_URL" "$INSTALL_DIR"
+    cd "$INSTALL_DIR"
+    log_info "Repository cloned successfully"
+fi
 
 # Install Docker and Docker Compose
 bash services/docker/install.sh
@@ -107,4 +120,4 @@ bash services/docker/install.sh
 # ./scripts/configure-firewall.sh
 
 log_info "Installation completed successfully!"
-log_info "Please reboot your system to apply all changes." 
+log_warn "Please reboot your system to apply all changes." 
