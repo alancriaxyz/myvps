@@ -54,27 +54,17 @@ cd myvps
 if [ -f "config/settings.sh" ]; then
     # Define as funções diretamente aqui para evitar problemas com source
     prompt_email() {
-        local max_attempts=3
-        local attempt=1
+        echo "Please enter your email address for SSL certificates and notifications"
+        read -p "Email: " MYVPS_EMAIL
         
-        echo "Please enter a valid email address (e.g., user@example.com)"
-        echo "The email will be used for SSL certificates and notifications"
-        
-        while [ $attempt -le $max_attempts ]; do
-            read -p "Enter your email: " EMAIL
-            # Validação simplificada de email
-            if [[ "$EMAIL" == *"@"*"."* ]]; then
-                echo "Email accepted: $EMAIL"
-                return 0
-            fi
-            echo "Invalid email format. Please enter a valid email address (e.g., user@example.com)"
-            echo "Attempt $attempt of $max_attempts"
-            echo "You entered: $EMAIL"
-            ((attempt++))
-        done
-        
-        echo "Maximum attempts reached. Please try again later."
-        exit 1
+        # Validação simplificada de email
+        if [[ "$MYVPS_EMAIL" == *"@"*"."* ]]; then
+            echo "Email accepted: $MYVPS_EMAIL"
+            export MYVPS_EMAIL
+            return 0
+        fi
+        echo "Invalid email format. Please try again."
+        prompt_email
     }
 
     save_settings() {
@@ -83,7 +73,7 @@ if [ -f "config/settings.sh" ]; then
 #!/bin/bash
 
 # MyVPS Configuration Settings
-EMAIL="$EMAIL"
+export MYVPS_EMAIL="$MYVPS_EMAIL"
 EOF
     }
 
@@ -92,7 +82,7 @@ EOF
         local temp_file=$(mktemp)
         
         # Replace email in the file
-        sed "s/seuemail@example.com/$EMAIL/g" "$file" > "$temp_file"
+        sed "s/seuemail@example.com/$MYVPS_EMAIL/g" "$file" > "$temp_file"
         
         # Move the temporary file back to the original
         mv "$temp_file" "$file"
