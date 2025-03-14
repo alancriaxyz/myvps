@@ -35,11 +35,8 @@ log_info "Updating system packages..."
 apt-get update
 apt-get upgrade -y
 
-# Install git if not installed
-if ! command -v git &> /dev/null; then
-    log_info "Installing git..."
-    apt-get install -y git
-fi
+# Install git
+bash services/git/install.sh
 
 # Clone or update repository
 bash scripts/clone.sh
