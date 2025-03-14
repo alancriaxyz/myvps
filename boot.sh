@@ -44,7 +44,7 @@ fi
 # Clone or update repository
 log_info "Cloning/updating repository..."
 REPO_URL="https://github.com/alancriaxyz/myvps.git"
-INSTALL_DIR="/root/myvps"
+INSTALL_DIR="myvps"
 
 if [ -d "$INSTALL_DIR" ]; then
     cd "$INSTALL_DIR"
