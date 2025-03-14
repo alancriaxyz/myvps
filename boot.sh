@@ -45,17 +45,25 @@ fi
 log_info "Cloning MyVPS repository..."
 log_info "Current directory before clone: $(pwd)"
 
-# Check if myvps directory exists and remove it
+# Check if myvps directory exists
 if [ -d "myvps" ]; then
-    log_warn "Directory 'myvps' already exists. Removing it..."
-    rm -rf myvps
-fi
-
-if git clone https://github.com/alancriaxyz/myvps.git; then
-    log_info "Clone successful"
+    log_warn "Directory 'myvps' already exists. Updating it..."
+    cd myvps
+    if git pull origin main; then
+        log_info "Repository updated successfully"
+        cd ..
+    else
+        log_error "Failed to update repository"
+        cd ..
+        exit 1
+    fi
 else
-    log_error "Failed to clone repository"
-    exit 1
+    if git clone https://github.com/alancriaxyz/myvps.git; then
+        log_info "Clone successful"
+    else
+        log_error "Failed to clone repository"
+        exit 1
+    fi
 fi
 
 # Load configuration functions
