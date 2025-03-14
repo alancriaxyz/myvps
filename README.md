@@ -37,6 +37,26 @@ After installation, reboot your system:
 sudo reboot
 ```
 
+## 🗑️ Uninstallation
+
+If you need to remove all components installed by this project, you can use the uninstall script:
+
+```bash
+# Download and run the uninstall script
+curl -O https://raw.githubusercontent.com/alancriaxyz/myvps/main/uninstall.sh && chmod +x uninstall.sh && sudo ./uninstall.sh
+```
+
+This will remove:
+- Docker and all containers
+- Docker Compose
+- Git
+- All project files
+
+After uninstallation, it's recommended to reboot your system:
+```bash
+sudo reboot
+```
+
 ## 🔒 Security
 
 - Firewall configured to allow only essential ports
