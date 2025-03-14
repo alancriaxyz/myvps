@@ -43,10 +43,13 @@ if command -v docker &> /dev/null; then
     log_info "Removing Docker packages..."
     apt-get remove --purge -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
-    # Remove Docker directories
-    log_info "Removing Docker directories..."
+    # Remove Docker directories and files
+    log_info "Removing Docker directories and files..."
     rm -rf /var/lib/docker
     rm -rf /var/lib/containerd
+    rm -rf /etc/docker
+    rm -f /etc/apt/keyrings/docker.gpg
+    rm -f /etc/apt/sources.list.d/docker.list
 
     # Remove docker group
     log_info "Removing docker group..."
@@ -56,6 +59,10 @@ if command -v docker &> /dev/null; then
     log_info "Cleaning unused packages..."
     apt-get autoremove -y
     apt-get clean
+
+    # Update apt cache after removing repository
+    log_info "Updating apt cache..."
+    apt-get update
 else
     log_warn "Docker is not installed on the system"
 fi

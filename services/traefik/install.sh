@@ -37,13 +37,13 @@ chmod 600 acme.json
 
 # Start Traefik
 log_info "Starting Traefik service..."
-docker-compose up -d
+docker compose up -d
 
 # Check if Traefik is running
 if docker ps | grep -q traefik; then
     log_info "Traefik is running successfully!"
     log_info "You can access the dashboard at http://your-server-ip:8080"
 else
-    log_error "Failed to start Traefik. Please check the logs with: docker-compose logs traefik"
+    log_error "Failed to start Traefik. Please check the logs with: docker compose logs traefik"
     exit 1
 fi 
