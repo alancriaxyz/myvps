@@ -2,6 +2,8 @@
   <img src="./assets/title.jpg" width="600"/>
 </div>
 
+<br />
+
 A personal project to automate my VPS setup with Docker, Traefik, and other configurations.
 
 ## 🚀 Features
