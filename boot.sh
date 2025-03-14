@@ -41,8 +41,58 @@ cd myvps
 
 # Load configuration functions
 if [ -f "config/settings.sh" ]; then
-    # Carrega apenas as funções do arquivo settings.sh
-    source <(grep -v '^#' config/settings.sh | grep -v '^$')
+    # Define as funções diretamente aqui para evitar problemas com source
+    prompt_email() {
+        local max_attempts=3
+        local attempt=1
+        
+        echo "Please enter a valid email address (e.g., user@example.com)"
+        echo "The email will be used for SSL certificates and notifications"
+        
+        while [ $attempt -le $max_attempts ]; do
+            read -p "Enter your email: " EMAIL
+            # Validação simplificada de email
+            if [[ "$EMAIL" == *"@"*"."* ]]; then
+                echo "Email accepted: $EMAIL"
+                return 0
+            fi
+            echo "Invalid email format. Please enter a valid email address (e.g., user@example.com)"
+            echo "Attempt $attempt of $max_attempts"
+            echo "You entered: $EMAIL"
+            ((attempt++))
+        done
+        
+        echo "Maximum attempts reached. Please try again later."
+        exit 1
+    }
+
+    save_settings() {
+        mkdir -p config
+        cat > "config/settings.sh" << EOF
+#!/bin/bash
+
+# MyVPS Configuration Settings
+EMAIL="$EMAIL"
+EOF
+    }
+
+    replace_variables() {
+        local file="$1"
+        local temp_file=$(mktemp)
+        
+        # Replace email in the file
+        sed "s/seuemail@example.com/$EMAIL/g" "$file" > "$temp_file"
+        
+        # Move the temporary file back to the original
+        mv "$temp_file" "$file"
+    }
+
+    configure_files() {
+        # Configure Traefik docker-compose.yml
+        if [ -f "services/traefik/docker-compose.yml" ]; then
+            replace_variables "services/traefik/docker-compose.yml"
+        fi
+    }
 else
     log_error "Configuration file not found"
     exit 1
