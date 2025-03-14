@@ -27,7 +27,6 @@ install_docker() {
         log_info "Installing Docker..."
         
         # Add Docker's official GPG key
-        apt-get update
         apt-get install -y ca-certificates curl gnupg
         install -m 0755 -d /etc/apt/keyrings
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -40,7 +39,7 @@ install_docker() {
           tee /etc/apt/sources.list.d/docker.list > /dev/null
 
         # Install Docker Engine
-        apt-get update
+        apt-get update # Necessário após adicionar novo repositório
         apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
         # Start and enable Docker service
