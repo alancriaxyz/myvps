@@ -35,37 +35,14 @@ log_info "Updating system packages..."
 apt-get update
 apt-get upgrade -y
 
-# Download and run git installation script
-log_info "Downloading git installation script..."
-mkdir -p /tmp/myvps-setup
-curl -s https://raw.githubusercontent.com/alancriaxyz/myvps/main/services/git/install.sh -o /tmp/myvps-setup/git-install.sh
-chmod +x /tmp/myvps-setup/git-install.sh
-log_info "Running git installation..."
-bash /tmp/myvps-setup/git-install.sh
-
-# Clone repository
-log_info "Cloning MyVPS repository..."
-
-# Check if myvps directory exists
-if [ -d "myvps" ]; then
-    log_warn "Directory 'myvps' already exists. Updating it..."
-    cd myvps
-    if git pull origin main; then
-        log_info "Repository updated successfully"
-        cd ..
-    else
-        log_error "Failed to update repository"
-        cd ..
-        exit 1
-    fi
-else
-    if git clone https://github.com/alancriaxyz/myvps.git; then
-        log_info "Clone successful"
-    else
-        log_error "Failed to clone repository"
-        exit 1
-    fi
+# Install git if not installed
+if ! command -v git &> /dev/null; then
+    log_info "Installing git..."
+    apt-get install -y git
 fi
+
+# Clone or update repository
+bash scripts/clone.sh
 
 # Define configuration functions
 prompt_email() {
