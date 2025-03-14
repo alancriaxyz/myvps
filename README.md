@@ -42,11 +42,7 @@ sudo reboot
 If you need to remove all components installed by this project, you can use the uninstall script:
 
 ```bash
-# If you already installed the project, the script is in the project directory
 cd /root/myvps && sudo ./uninstall.sh
-
-# Or if you haven't installed yet, download and run the uninstall script
-curl -O https://raw.githubusercontent.com/alancriaxyz/myvps/main/uninstall.sh && chmod +x uninstall.sh && sudo ./uninstall.sh
 ```
 
 This will remove:
