@@ -44,7 +44,7 @@ fi
 # Clone or update repository
 log_info "Cloning/updating repository..."
 REPO_URL="https://github.com/alancriaxyz/myvps.git"
-INSTALL_DIR="myvps"
+INSTALL_DIR="/root/myvps"
 
 if [ -d "$INSTALL_DIR" ]; then
     cd "$INSTALL_DIR"
@@ -57,67 +57,13 @@ else
     log_info "Repository cloned successfully"
 fi
 
+# Run environment configuration
+log_info "Running environment configuration..."
+bash configs/environment.sh
+
 # Install Docker and Docker Compose
+log_info "Installing Docker and Docker Compose..."
 bash services/docker/install.sh
-
-# # Define configuration functions
-# prompt_email() {
-#     echo "Please enter your email address for SSL certificates and notifications"
-#     read -p "Email: " email_input
-    
-#     # Validação simplificada de email
-#     if [[ "$email_input" == *"@"*"."* ]]; then
-#         echo "Email accepted: $email_input"
-#         # Export directly to environment
-#         export MYVPS_EMAIL="$email_input"
-#         log_info "Email variable exported: $MYVPS_EMAIL"
-#         return 0
-#     fi
-#     echo "Invalid email format. Please try again."
-#     prompt_email
-# }
-
-# replace_variables() {
-#     local file="$1"
-#     local temp_file=$(mktemp)
-    
-#     # Replace email in the file
-#     sed "s/seuemail@example.com/$MYVPS_EMAIL/g" "$file" > "$temp_file"
-    
-#     # Move the temporary file back to the original
-#     mv "$temp_file" "$file"
-# }
-
-# configure_files() {
-#     # Configure Traefik docker-compose.yml
-#     if [ -f "myvps/services/traefik/docker-compose.yml" ]; then
-#         replace_variables "myvps/services/traefik/docker-compose.yml"
-#     fi
-# }
-
-# # Prompt for configuration
-# log_info "Please provide configuration details..."
-# prompt_email
-
-# # Configure files with the provided settings
-# configure_files
-
-# # Make scripts executable
-# chmod +x services/docker/setup/install.sh
-# chmod +x services/traefik/install.sh
-# chmod +x scripts/configure-firewall.sh
-
-# # Run Docker environment setup
-# log_info "Setting up Docker environment..."
-# ./services/docker/setup/install.sh
-
-# # Run Traefik setup
-# log_info "Setting up Traefik..."
-# ./services/traefik/install.sh
-
-# # Run Firewall configuration script
-# log_info "Configuring firewall..."
-# ./scripts/configure-firewall.sh
 
 log_info "Installation completed successfully!"
 log_warn "Please reboot your system to apply all changes." 
