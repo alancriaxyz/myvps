@@ -34,6 +34,17 @@ fi
 TEMP_DIR=$(mktemp -d)
 cd "$TEMP_DIR"
 
+# Update system and install git
+log_info "Updating system packages..."
+apt-get update
+apt-get upgrade -y
+
+# Install git if not installed
+if ! command -v git &> /dev/null; then
+    log_info "Installing git..."
+    apt-get install -y git
+fi
+
 # Clone repository
 log_info "Cloning MyVPS repository..."
 git clone https://github.com/alancriaxyz/myvps.git
@@ -105,17 +116,6 @@ save_settings
 
 # Configure files with the provided settings
 configure_files
-
-# Update system
-log_info "Updating system packages..."
-apt-get update
-apt-get upgrade -y
-
-# Install git if not installed
-if ! command -v git &> /dev/null; then
-    log_info "Installing git..."
-    apt-get install -y git
-fi
 
 # # Make scripts executable
 # chmod +x services/docker/setup/install.sh
