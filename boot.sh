@@ -30,6 +30,9 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Save current directory
+CURRENT_DIR=$(pwd)
+
 # Create temporary directory
 TEMP_DIR=$(mktemp -d)
 log_info "Created temporary directory: $TEMP_DIR"
@@ -53,9 +56,9 @@ git clone https://github.com/alancriaxyz/myvps.git
 log_info "Repository cloned. Current directory contents:"
 ls -la
 
-# Copy files to current directory
-log_info "Copying files to current directory..."
-cp -r myvps/* /root/
+# Copy files to original directory
+log_info "Copying files to original directory..."
+cp -r myvps/* "$CURRENT_DIR/"
 log_info "Files copied successfully"
 
 # # Load configuration functions
