@@ -38,11 +38,11 @@ apt-get upgrade -y
 # Install git
 bash services/git/install.sh
 
-# Clone or update repository
-bash scripts/clone.sh
+# # Clone or update repository
+# bash scripts/clone.sh
 
-# Install Docker and Docker Compose
-bash services/docker/install.sh
+# # Install Docker and Docker Compose
+# bash services/docker/install.sh
 
 # # Define configuration functions
 # prompt_email() {
