@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  langflow:
+    image: logspace/langflow:latest
+    container_name: langflow
+    restart: unless-stopped
+    environment:
+      - LANGFLOW_AUTO_LOGIN=false
+      - LANGFLOW_HOST=0.0.0.0
+      - LANGFLOW_PORT=7860
+    volumes:
+      - langflow_data:/app/db
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.langflow.rule=Host(`langflow.${DOMAIN}`)"
+      - "traefik.http.routers.langflow.entrypoints=websecure"
+      - "traefik.http.routers.langflow.tls.certresolver=letsencrypt"
+      - "traefik.http.services.langflow.loadbalancer.server.port=7860"
+
+volumes:
+  langflow_data:
+    name: langflow_data
+
+networks:
+  traefik-public:
+    external: true 
