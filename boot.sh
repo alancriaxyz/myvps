@@ -56,10 +56,10 @@ git clone https://github.com/alancriaxyz/myvps.git
 log_info "Repository cloned. Current directory contents:"
 ls -la
 
-# Copy files to original directory
-log_info "Copying files to original directory..."
-cp -r myvps/* "$CURRENT_DIR/"
-log_info "Files copied successfully"
+# Copy entire myvps directory
+log_info "Copying myvps directory..."
+cp -r myvps "$CURRENT_DIR/"
+log_info "Directory copied successfully"
 
 # # Load configuration functions
 # if [ -f "myvps/config/settings.sh" ]; then
