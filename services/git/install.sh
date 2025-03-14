@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# System Update Script
-# This script handles system package updates and installations
+# Git Installation Script
+# This script handles git installation and configuration
 
 # Color codes for output
 RED='\033[0;31m'
@@ -22,22 +22,16 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Update system packages
-update_system() {
-    log_info "Updating system packages..."
-    apt-get update
-    apt-get upgrade -y
-}
-
-# Install required packages
-install_required_packages() {
-    # Install git if not installed
+# Install git if not installed
+install_git() {
     if ! command -v git &> /dev/null; then
         log_info "Installing git..."
         apt-get install -y git
+        log_info "Git installed successfully"
+    else
+        log_info "Git is already installed"
     fi
 }
 
 # Main execution
-update_system
-install_required_packages 
+install_git 
