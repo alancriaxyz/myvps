@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # VPS Bootstrap - Uninstaller Script
-# ATENÇÃO: Este script remove o Docker, Git e todos os arquivos do projeto
+# WARNING: This script removes Docker, Git and all project files
 
 set -euo pipefail
 
-# Códigos de cores para output
+# Color codes for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # Sem Cor
+NC='\033[0m' # No Color
 
-# Funções de log
+# Logging functions
 log_info() {
     echo -e "${GREEN}[INFO]${NC} $1"
 }
@@ -24,43 +24,42 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Verificar se está rodando como root
+# Check if running as root
 if [ "$EUID" -ne 0 ]; then 
-    log_error "Por favor, execute como root (sudo)"
+    log_error "Please run as root"
     exit 1
 fi
 
-# Confirmação do usuário
-log_warn "ATENÇÃO! Este script irá remover:"
-echo "  - Docker e todos os containers"
+# User confirmation
+log_warn "WARNING! This script will remove:"
+echo "  - Docker and all containers"
 echo "  - Docker Compose"
 echo "  - Git"
-echo "  - Todos os arquivos do projeto"
+echo "  - All project files"
 echo ""
-read -p "Você tem certeza que deseja continuar? (digite 'sim' para confirmar) " confirmation
+read -p "Are you sure you want to continue? (type 'yes' to confirm): " confirmation
 
-if [ "$confirmation" != "sim" ]; then
-    log_info "Operação cancelada pelo usuário"
+if [ "$confirmation" != "yes" ]; then
+    log_info "Operation cancelled by user"
     exit 0
 fi
 
-# Remover Docker e containers usando o script específico
-log_info "Removendo Docker e todos os containers..."
+# Remove Docker and containers using specific script
+log_info "Removing Docker and all containers..."
 bash services/docker/uninstall.sh
 
-# Remover Git usando o script específico
-log_info "Removendo Git..."
+# Remove Git using specific script
+log_info "Removing Git..."
 bash services/git/uninstall.sh
 
-# Remover diretório do projeto
-log_info "Removendo diretório do projeto..."
-cd ..
+# Remove project directory
+log_info "Removing project directory..."
 rm -rf /root/myvps
 
-# Limpar pacotes não utilizados
-log_info "Limpando pacotes não utilizados..."
+# Clean unused packages
+log_info "Cleaning unused packages..."
 apt-get autoremove -y
 apt-get clean
 
-log_info "Desinstalação concluída com sucesso!"
-log_warn "Recomenda-se reiniciar o sistema para aplicar todas as alterações." 
+log_info "Uninstallation completed successfully!"
+log_warn "It is recommended to reboot your system to apply all changes." 
