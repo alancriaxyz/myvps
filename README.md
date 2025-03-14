@@ -1,4 +1,6 @@
-# MyVPS
+<div align="center">
+  <img src="./assets/title.jpg" width="600"/>
+</div>
 
 A personal project to automate my VPS setup with Docker, Traefik, and other configurations.
 
