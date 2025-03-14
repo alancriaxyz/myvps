@@ -30,7 +30,7 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Update system
+# Update system and install git
 log_info "Updating system packages..."
 apt-get update
 apt-get upgrade -y
@@ -41,30 +41,11 @@ if ! command -v git &> /dev/null; then
     apt-get install -y git
 fi
 
-# Clone repository
-log_info "Cloning MyVPS repository..."
-if [ -d "myvps" ]; then
-    log_warn "Directory 'myvps' already exists. Updating it..."
-    cd myvps
-    if git pull origin main; then
-        log_info "Repository updated successfully"
-        cd ..
-    else
-        log_error "Failed to update repository"
-        cd ..
-        exit 1
-    fi
-else
-    if git clone https://github.com/alancriaxyz/myvps.git; then
-        log_info "Clone successful"
-    else
-        log_error "Failed to clone repository"
-        exit 1
-    fi
-fi
+# Clone or update repository
+bash scripts/clone.sh
 
 # Install Docker and Docker Compose
-bash myvps/services/docker/install.sh
+bash services/docker/install.sh
 
 # # Define configuration functions
 # prompt_email() {
