@@ -8,11 +8,20 @@ EMAIL=""
 
 # Function to prompt for email
 prompt_email() {
-    read -p "Enter your email for SSL certificates: " EMAIL
-    if [[ ! "$EMAIL" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
-        echo "Invalid email format. Please try again."
-        prompt_email
-    fi
+    local max_attempts=3
+    local attempt=1
+    
+    while [ $attempt -le $max_attempts ]; do
+        read -p "Enter your email for SSL certificates: " EMAIL
+        if [[ "$EMAIL" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+            return 0
+        fi
+        echo "Invalid email format. Please try again. (Attempt $attempt of $max_attempts)"
+        ((attempt++))
+    done
+    
+    echo "Maximum attempts reached. Please try again later."
+    exit 1
 }
 
 # Function to save settings
