@@ -52,88 +52,15 @@ fi
 
 # Clone repository
 log_info "Cloning MyVPS repository..."
-git clone https://github.com/alancriaxyz/myvps.git
-log_info "Repository cloned. Current directory contents:"
-ls -la
-
-# Copy entire myvps directory
-log_info "Copying myvps directory..."
-cp -r myvps "$CURRENT_DIR/"
-log_info "Directory copied successfully"
-
-# # Load configuration functions
-# if [ -f "myvps/config/settings.sh" ]; then
-#     # Define as funções diretamente aqui para evitar problemas com source
-#     prompt_email() {
-#         echo "Please enter your email address for SSL certificates and notifications"
-#         read -p "Email: " MYVPS_EMAIL
-        
-#         # Validação simplificada de email
-#         if [[ "$MYVPS_EMAIL" == *"@"*"."* ]]; then
-#             echo "Email accepted: $MYVPS_EMAIL"
-#             export MYVPS_EMAIL
-#             return 0
-#         fi
-#         echo "Invalid email format. Please try again."
-#         prompt_email
-#     }
-
-#     save_settings() {
-#         mkdir -p myvps/config
-#         cat > "myvps/config/settings.sh" << EOF
-# #!/bin/bash
-
-# # MyVPS Configuration Settings
-# export MYVPS_EMAIL="$MYVPS_EMAIL"
-# EOF
-#     }
-
-#     replace_variables() {
-#         local file="$1"
-#         local temp_file=$(mktemp)
-        
-#         # Replace email in the file
-#         sed "s/seuemail@example.com/$MYVPS_EMAIL/g" "$file" > "$temp_file"
-        
-#         # Move the temporary file back to the original
-#         mv "$temp_file" "$file"
-#     }
-
-#     configure_files() {
-#         # Configure Traefik docker-compose.yml
-#         if [ -f "myvps/services/traefik/docker-compose.yml" ]; then
-#             replace_variables "myvps/services/traefik/docker-compose.yml"
-#         fi
-#     }
-# else
-#     log_error "Configuration file not found"
-#     exit 1
-# fi
-
-# # Prompt for configuration
-# log_info "Please provide configuration details..."
-# prompt_email
-# save_settings
-
-# # Configure files with the provided settings
-# configure_files
-
-# # Make scripts executable
-# chmod +x services/docker/setup/install.sh
-# chmod +x services/traefik/install.sh
-# chmod +x scripts/configure-firewall.sh
-
-# # Run Docker environment setup
-# log_info "Setting up Docker environment..."
-# ./services/docker/setup/install.sh
-
-# # Run Traefik setup
-# log_info "Setting up Traefik..."
-# ./services/traefik/install.sh
-
-# # Run Firewall configuration script
-# log_info "Configuring firewall..."
-# ./scripts/configure-firewall.sh
+log_info "Current directory before clone: $(pwd)"
+if git clone https://github.com/alancriaxyz/myvps.git; then
+    log_info "Clone successful"
+    log_info "Directory contents after clone:"
+    ls -la
+else
+    log_error "Failed to clone repository"
+    exit 1
+fi
 
 # Cleanup
 cd /
