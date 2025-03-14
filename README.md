@@ -29,13 +29,7 @@ Run the following commands to install:
 
 ```bash
 # Download the installation script
-curl -O https://raw.githubusercontent.com/alancriaxyz/myvps/main/boot.sh
-
-# Make it executable
-chmod +x boot.sh
-
-# Run the installation script
-sudo ./boot.sh
+curl -O https://raw.githubusercontent.com/alancriaxyz/myvps/main/boot.sh && chmod +x boot.sh &&  ./boot.sh
 ```
 
 After installation, reboot your system:

@@ -65,46 +65,40 @@ else
     fi
 fi
 
-# Load configuration functions
-if [ -f "myvps/config/settings.sh" ]; then
-    # Define as funções diretamente aqui para evitar problemas com source
-    prompt_email() {
-        echo "Please enter your email address for SSL certificates and notifications"
-        read -p "Email: " email_input
-        
-        # Validação simplificada de email
-        if [[ "$email_input" == *"@"*"."* ]]; then
-            echo "Email accepted: $email_input"
-            # Export directly to environment
-            export MYVPS_EMAIL="$email_input"
-            log_info "Email variable exported: $MYVPS_EMAIL"
-            return 0
-        fi
-        echo "Invalid email format. Please try again."
-        prompt_email
-    }
+# Define configuration functions
+prompt_email() {
+    echo "Please enter your email address for SSL certificates and notifications"
+    read -p "Email: " email_input
+    
+    # Validação simplificada de email
+    if [[ "$email_input" == *"@"*"."* ]]; then
+        echo "Email accepted: $email_input"
+        # Export directly to environment
+        export MYVPS_EMAIL="$email_input"
+        log_info "Email variable exported: $MYVPS_EMAIL"
+        return 0
+    fi
+    echo "Invalid email format. Please try again."
+    prompt_email
+}
 
-    replace_variables() {
-        local file="$1"
-        local temp_file=$(mktemp)
-        
-        # Replace email in the file
-        sed "s/seuemail@example.com/$MYVPS_EMAIL/g" "$file" > "$temp_file"
-        
-        # Move the temporary file back to the original
-        mv "$temp_file" "$file"
-    }
+replace_variables() {
+    local file="$1"
+    local temp_file=$(mktemp)
+    
+    # Replace email in the file
+    sed "s/seuemail@example.com/$MYVPS_EMAIL/g" "$file" > "$temp_file"
+    
+    # Move the temporary file back to the original
+    mv "$temp_file" "$file"
+}
 
-    configure_files() {
-        # Configure Traefik docker-compose.yml
-        if [ -f "myvps/services/traefik/docker-compose.yml" ]; then
-            replace_variables "myvps/services/traefik/docker-compose.yml"
-        fi
-    }
-else
-    log_error "Configuration file not found"
-    exit 1
-fi
+configure_files() {
+    # Configure Traefik docker-compose.yml
+    if [ -f "myvps/services/traefik/docker-compose.yml" ]; then
+        replace_variables "myvps/services/traefik/docker-compose.yml"
+    fi
+}
 
 # Prompt for configuration
 log_info "Please provide configuration details..."
