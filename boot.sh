@@ -44,47 +44,47 @@ bash scripts/clone.sh
 # Install Docker and Docker Compose
 bash services/docker/install.sh
 
-# Define configuration functions
-prompt_email() {
-    echo "Please enter your email address for SSL certificates and notifications"
-    read -p "Email: " email_input
+# # Define configuration functions
+# prompt_email() {
+#     echo "Please enter your email address for SSL certificates and notifications"
+#     read -p "Email: " email_input
     
-    # Validação simplificada de email
-    if [[ "$email_input" == *"@"*"."* ]]; then
-        echo "Email accepted: $email_input"
-        # Export directly to environment
-        export MYVPS_EMAIL="$email_input"
-        log_info "Email variable exported: $MYVPS_EMAIL"
-        return 0
-    fi
-    echo "Invalid email format. Please try again."
-    prompt_email
-}
+#     # Validação simplificada de email
+#     if [[ "$email_input" == *"@"*"."* ]]; then
+#         echo "Email accepted: $email_input"
+#         # Export directly to environment
+#         export MYVPS_EMAIL="$email_input"
+#         log_info "Email variable exported: $MYVPS_EMAIL"
+#         return 0
+#     fi
+#     echo "Invalid email format. Please try again."
+#     prompt_email
+# }
 
-replace_variables() {
-    local file="$1"
-    local temp_file=$(mktemp)
+# replace_variables() {
+#     local file="$1"
+#     local temp_file=$(mktemp)
     
-    # Replace email in the file
-    sed "s/seuemail@example.com/$MYVPS_EMAIL/g" "$file" > "$temp_file"
+#     # Replace email in the file
+#     sed "s/seuemail@example.com/$MYVPS_EMAIL/g" "$file" > "$temp_file"
     
-    # Move the temporary file back to the original
-    mv "$temp_file" "$file"
-}
+#     # Move the temporary file back to the original
+#     mv "$temp_file" "$file"
+# }
 
-configure_files() {
-    # Configure Traefik docker-compose.yml
-    if [ -f "myvps/services/traefik/docker-compose.yml" ]; then
-        replace_variables "myvps/services/traefik/docker-compose.yml"
-    fi
-}
+# configure_files() {
+#     # Configure Traefik docker-compose.yml
+#     if [ -f "myvps/services/traefik/docker-compose.yml" ]; then
+#         replace_variables "myvps/services/traefik/docker-compose.yml"
+#     fi
+# }
 
-# Prompt for configuration
-log_info "Please provide configuration details..."
-prompt_email
+# # Prompt for configuration
+# log_info "Please provide configuration details..."
+# prompt_email
 
-# Configure files with the provided settings
-configure_files
+# # Configure files with the provided settings
+# configure_files
 
 # # Make scripts executable
 # chmod +x services/docker/setup/install.sh
