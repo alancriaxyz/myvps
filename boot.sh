@@ -48,10 +48,9 @@ fi
 # Clone repository
 log_info "Cloning MyVPS repository..."
 git clone https://github.com/alancriaxyz/myvps.git
-cd myvps
 
 # Load configuration functions
-if [ -f "config/settings.sh" ]; then
+if [ -f "myvps/config/settings.sh" ]; then
     # Define as funções diretamente aqui para evitar problemas com source
     prompt_email() {
         echo "Please enter your email address for SSL certificates and notifications"
@@ -68,8 +67,8 @@ if [ -f "config/settings.sh" ]; then
     }
 
     save_settings() {
-        mkdir -p config
-        cat > "config/settings.sh" << EOF
+        mkdir -p myvps/config
+        cat > "myvps/config/settings.sh" << EOF
 #!/bin/bash
 
 # MyVPS Configuration Settings
@@ -90,8 +89,8 @@ EOF
 
     configure_files() {
         # Configure Traefik docker-compose.yml
-        if [ -f "services/traefik/docker-compose.yml" ]; then
-            replace_variables "services/traefik/docker-compose.yml"
+        if [ -f "myvps/services/traefik/docker-compose.yml" ]; then
+            replace_variables "myvps/services/traefik/docker-compose.yml"
         fi
     }
 else
