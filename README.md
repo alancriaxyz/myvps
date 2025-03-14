@@ -1,3 +1,5 @@
+# MyVPS Bootstrap
+
 <div align="center">
   <img src="./assets/title.jpg" width="600"/>
 </div>
@@ -23,10 +25,17 @@ A personal project to automate my VPS setup with Docker, Traefik, and other conf
 
 ## 🛠️ Installation
 
-Run the following command to install automatically:
+Run the following commands to install:
 
 ```bash
-curl -s https://raw.githubusercontent.com/alancriaxyz/myvps/main/boot.sh | sudo bash
+# Download the installation script
+curl -O https://raw.githubusercontent.com/alancriaxyz/myvps/main/boot.sh
+
+# Make it executable
+chmod +x boot.sh
+
+# Run the installation script
+sudo ./boot.sh
 ```
 
 After installation, reboot your system:
