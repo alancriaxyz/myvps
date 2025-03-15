@@ -3,8 +3,6 @@
 # Traefik Installation Script
 # This script creates the necessary files and starts the Traefik service
 
-set -euo pipefail
-
 # Color codes for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -30,21 +28,29 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Create acme.json file
-log_info "Creating acme.json file..."
-touch /root/myvps/acme.json
-chmod 600 /root/myvps/acme.json
+# Check if Traefik is already running
+if docker ps --format '{{.Names}}' | grep -q "^traefik$"; then
+    warn "Traefik is already running"
+    info "Skipping installation..."
+    exit 0
+fi
+
+# Check if acme.json exists
+if [ ! -f "/root/myvps/acme.json" ]; then
+    info "Creating acme.json file..."
+    touch /root/myvps/acme.json
+    chmod 600 /root/myvps/acme.json
+fi
 
 # Start Traefik
-log_info "Starting Traefik service..."
+info "Starting Traefik service..."
 cd /root/myvps/services/traefik
 docker compose up -d
 
-# Check if Traefik is running
-if docker ps | grep -q traefik; then
-    log_info "Traefik is running successfully!"
-    log_info "You can access the dashboard at http://your-server-ip:8080"
+# Check if containers are running
+if [ $? -eq 0 ]; then
+    success "Traefik has been successfully started!"
 else
-    log_error "Failed to start Traefik. Please check the logs with: docker compose logs traefik"
+    error "Failed to start Traefik containers"
     exit 1
 fi 

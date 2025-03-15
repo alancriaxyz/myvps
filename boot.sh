@@ -57,7 +57,7 @@ fi
 
 # Run environment configuration
 log_info "Running environment configuration..."
-bash /root/myvps/configs/environment.sh
+source /root/myvps/configs/environment.sh
 
 # Install Docker and Docker Compose
 log_info "Installing Docker and Docker Compose..."
@@ -69,6 +69,7 @@ bash /root/myvps/services/traefik/install.sh
 
 # Install and configure Portainer
 log_info "Installing and configuring Portainer..."
+export MYVPS_DOMAIN
 bash /root/myvps/services/portainer/install.sh
 
 log_info "Installation completed successfully!"
