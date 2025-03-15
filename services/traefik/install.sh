@@ -30,27 +30,27 @@ fi
 
 # Check if Traefik is already running
 if docker ps --format '{{.Names}}' | grep -q "^traefik$"; then
-    warn "Traefik is already running"
-    info "Skipping installation..."
+    log_warn "Traefik is already running"
+    log_info "Skipping installation..."
     exit 0
 fi
 
 # Check if acme.json exists
 if [ ! -f "/root/myvps/acme.json" ]; then
-    info "Creating acme.json file..."
+    log_info "Creating acme.json file..."
     touch /root/myvps/acme.json
     chmod 600 /root/myvps/acme.json
 fi
 
 # Start Traefik
-info "Starting Traefik service..."
+log_info "Starting Traefik service..."
 cd /root/myvps/services/traefik
 docker compose up -d
 
 # Check if containers are running
 if [ $? -eq 0 ]; then
-    success "Traefik has been successfully started!"
+    log_info "Traefik has been successfully started!"
 else
-    error "Failed to start Traefik containers"
+    log_error "Failed to start Traefik containers"
     exit 1
 fi 
