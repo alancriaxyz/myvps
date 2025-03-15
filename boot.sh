@@ -57,19 +57,19 @@ fi
 
 # Run environment configuration
 log_info "Running environment configuration..."
-bash /root/myvps/configs/environment.sh
+source "$INSTALL_DIR/configs/environment.sh"
 
 # Install Docker and Docker Compose
 log_info "Installing Docker and Docker Compose..."
-bash /root/myvps/services/docker/install.sh
+source "$INSTALL_DIR/services/docker/install.sh"
 
 # Install and configure Traefik
 log_info "Installing and configuring Traefik..."
-bash /root/myvps/services/traefik/install.sh
+source "$INSTALL_DIR/services/traefik/install.sh"
 
 # Install and configure Portainer
 log_info "Installing and configuring Portainer..."
-bash /root/myvps/services/portainer/install.sh
+source "$INSTALL_DIR/services/portainer/install.sh"
 
 log_info "Installation completed successfully!"
 log_warn "Please reboot your system to apply all changes." 
