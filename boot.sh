@@ -64,16 +64,12 @@ log_info "Installing Docker and Docker Compose..."
 bash /root/myvps/services/docker/install.sh
 
 # Install and configure Traefik
-if docker ps --format '{{.Names}}' | grep -q "^traefik$"; then
-    log_warn "Traefik is already running, skipping installation..."
-else
-    log_info "Installing and configuring Traefik..."
-    if [ ! -f "/root/myvps/acme.json" ]; then
-        touch /root/myvps/acme.json
-        chmod 600 /root/myvps/acme.json
-    fi
-    bash /root/myvps/services/traefik/install.sh
-fi
+log_info "Installing and configuring Traefik..."
+bash /root/myvps/services/traefik/install.sh
+
+# Install and configure Portainer
+log_info "Installing and configuring Portainer..."
+bash /root/myvps/services/portainer/install.sh
 
 log_info "Installation completed successfully!"
 log_warn "Please reboot your system to apply all changes." 

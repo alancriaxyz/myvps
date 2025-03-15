@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.DOMAIN_PLACEHOLDER`)"
+      - "traefik.http.routers.portainer.tls.certresolver=leresolver"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+    networks:
+      - default
+
+# Define a rede externa para o Traefik
+networks:
+  default:
+    external: true
+    name: traefik 

@@ -53,14 +53,38 @@ prompt_email() {
     prompt_email
 }
 
+prompt_domain() {
+    # Check if domain is already set
+    if [ -n "${MYVPS_DOMAIN:-}" ]; then
+        log_info "Using existing domain: $MYVPS_DOMAIN"
+        return 0
+    fi
+
+    echo "Please enter your domain (e.g., yourdomain.com)"
+    read -p "Domain: " domain_input
+    
+    # Simple domain validation
+    if [[ "$domain_input" =~ ^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$ ]]; then
+        echo "Domain accepted: $domain_input"
+        # Export to environment
+        export MYVPS_DOMAIN="$domain_input"
+        log_info "Domain variable exported: $MYVPS_DOMAIN"
+        return 0
+    fi
+    log_error "Invalid domain format. Please try again."
+    prompt_domain
+}
+
 replace_variables() {
     local file="$1"
     local temp_file=$(mktemp)
     
     log_info "Configuring file: $file"
     
-    # Replace email in the file
-    sed "s/seuemail@example.com/$MYVPS_EMAIL/g" "$file" > "$temp_file"
+    # Replace email and domain in the file
+    sed -e "s/seuemail@example.com/$MYVPS_EMAIL/g" \
+        -e "s/DOMAIN_PLACEHOLDER/$MYVPS_DOMAIN/g" \
+        "$file" > "$temp_file"
     
     # Move the temporary file back to the original
     mv "$temp_file" "$file"
@@ -77,7 +101,14 @@ configure_files() {
     else
         log_warn "Traefik compose file not found: $traefik_compose"
     fi
-    
+
+    # Configure Portainer docker-compose.yml
+    local portainer_compose="/root/myvps/services/portainer/docker-compose.yml"
+    if [ -f "$portainer_compose" ]; then
+        replace_variables "$portainer_compose"
+    else
+        log_warn "Portainer compose file not found: $portainer_compose"
+    fi
 }
 
 # Main execution
@@ -85,6 +116,7 @@ log_info "Starting configuration setup..."
 
 # Prompt for configuration details
 prompt_email
+prompt_domain
 
 # Configure files with the provided settings
 configure_files
