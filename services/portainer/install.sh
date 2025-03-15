@@ -33,12 +33,6 @@ cd "$(dirname "$0")"
 # Create data directory if it doesn't exist
 mkdir -p data
 
-# Check if domain is set
-if [ -z "${MYVPS_DOMAIN:-}" ]; then
-    log_error "Domain not set. Please run environment.sh first"
-    exit 1
-fi
-
 log_info "Starting Portainer installation..."
 
 # Deploy Portainer

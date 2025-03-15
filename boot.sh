@@ -69,7 +69,6 @@ bash /root/myvps/services/traefik/install.sh
 
 # Install and configure Portainer
 log_info "Installing and configuring Portainer..."
-export MYVPS_DOMAIN
 bash /root/myvps/services/portainer/install.sh
 
 log_info "Installation completed successfully!"
