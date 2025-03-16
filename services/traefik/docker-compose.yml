@@ -10,11 +10,11 @@ services:
       - "--log.level=ERROR"
       - "--certificatesresolvers.leresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.leresolver.acme.email=seuemail@example.com"
-      - "--certificatesresolvers.leresolver.acme.storage=acme.json"
+      - "--certificatesresolvers.leresolver.acme.storage=/acme.json"
       - "--certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./acme.json:/acme.json"
+      - "/root/myvps/acme.json:/acme.json"
     ports:
       - "80:80"
       - "443:443"
