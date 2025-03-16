@@ -11,6 +11,9 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Config file path
+CONFIG_FILE="/root/myvps/.env"
+
 # Logging functions
 log_info() {
     echo -e "${GREEN}[INFO]${NC} $1"
@@ -30,12 +33,43 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Load existing configuration
+load_config() {
+    # Create or load the config file
+    if [ ! -f "$CONFIG_FILE" ]; then
+        log_info "Creating new config file: $CONFIG_FILE"
+        echo "# MyVPS Configuration" > "$CONFIG_FILE"
+        echo "MYVPS_EMAIL=" >> "$CONFIG_FILE"
+        echo "MYVPS_DOMAIN=" >> "$CONFIG_FILE"
+        chmod 600 "$CONFIG_FILE"
+    else
+        log_info "Loading existing configuration from $CONFIG_FILE"
+    fi
+
+    # Load the configuration
+    source "$CONFIG_FILE"
+}
+
+# Save configuration
+save_config() {
+    log_info "Saving configuration to $CONFIG_FILE"
+    echo "MYVPS_EMAIL=$MYVPS_EMAIL" > "$CONFIG_FILE"
+    echo "MYVPS_DOMAIN=$MYVPS_DOMAIN" >> "$CONFIG_FILE"
+    chmod 600 "$CONFIG_FILE"
+}
+
 # Configuration functions
 prompt_email() {
-    # Check if email is already set
+    # Check if email is already set from config file
     if [ -n "${MYVPS_EMAIL:-}" ]; then
         log_info "Using existing email: $MYVPS_EMAIL"
         return 0
+    fi
+
+    # Check if any containers are running
+    if docker ps -q &> /dev/null; then
+        log_error "Containers are running but no email configuration found. This shouldn't happen!"
+        exit 1
     fi
 
     echo "Please enter your email address for SSL certificates and notifications"
@@ -54,10 +88,16 @@ prompt_email() {
 }
 
 prompt_domain() {
-    # Check if domain is already set
+    # Check if domain is already set from config file
     if [ -n "${MYVPS_DOMAIN:-}" ]; then
         log_info "Using existing domain: $MYVPS_DOMAIN"
         return 0
+    fi
+
+    # Check if any containers are running
+    if docker ps -q &> /dev/null; then
+        log_error "Containers are running but no domain configuration found. This shouldn't happen!"
+        exit 1
     fi
 
     echo "Please enter your domain (e.g., yourdomain.com)"
@@ -109,14 +149,28 @@ configure_files() {
     else
         log_warn "Portainer compose file not found: $portainer_compose"
     fi
+
+    # Configure WAHA docker-compose.yml if exists
+    local waha_compose="/root/myvps/services/waha/docker-compose.yml"
+    if [ -f "$waha_compose" ]; then
+        replace_variables "$waha_compose"
+    else
+        log_warn "WAHA compose file not found: $waha_compose"
+    fi
 }
 
 # Main execution
 log_info "Starting configuration setup..."
 
+# Load existing configuration
+load_config
+
 # Prompt for configuration details
 prompt_email
 prompt_domain
+
+# Save configuration for future use
+save_config
 
 # Configure files with the provided settings
 configure_files

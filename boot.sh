@@ -59,17 +59,17 @@ fi
 log_info "Running environment configuration..."
 source "$INSTALL_DIR/configs/environment.sh"
 
-# Install Docker and Docker Compose
-log_info "Installing Docker and Docker Compose..."
-source "$INSTALL_DIR/services/docker/install.sh"
+# # Install Docker and Docker Compose
+# log_info "Installing Docker and Docker Compose..."
+# source "$INSTALL_DIR/services/docker/install.sh"
 
-# Install and configure Traefik
-log_info "Installing and configuring Traefik..."
-source "$INSTALL_DIR/services/traefik/install.sh"
+# # Install and configure Traefik
+# log_info "Installing and configuring Traefik..."
+# source "$INSTALL_DIR/services/traefik/install.sh"
 
-# Install and configure Portainer
-log_info "Installing and configuring Portainer..."
-source "$INSTALL_DIR/services/portainer/install.sh"
+# # Install and configure Portainer
+# log_info "Installing and configuring Portainer..."
+# source "$INSTALL_DIR/services/portainer/install.sh"
 
-log_info "Installation completed successfully!"
-log_warn "Please reboot your system to apply all changes." 
+# log_info "Installation completed successfully!"
+# log_warn "Please reboot your system to apply all changes." 
