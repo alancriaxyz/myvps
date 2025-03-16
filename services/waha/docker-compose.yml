@@ -1,0 +1,31 @@
+services:
+  waha:
+    image: devlikeapro/whatsapp-http-api
+    container_name: waha
+    restart: unless-stopped
+    environment:
+      # Configurações gerais
+      - WAHA_API_KEY=your-api-key-here  # Substitua com uma chave segura
+      - WAHA_HOST=0.0.0.0
+      - WAHA_PORT=3000
+      # Configurações do WhatsApp
+      - WHATSAPP_WAIT_FOR_CONNECTION=true
+      - WHATSAPP_REJECT_CALLS=true
+      # Configurações do Browser
+      - BROWSER_TYPE=puppeteer
+      - BROWSER_ARGS=--no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage
+    volumes:
+      - ./data:/app/data  # Persiste os dados do WhatsApp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.waha.entrypoints=websecure"
+      - "traefik.http.routers.waha.rule=Host(`waha.DOMAIN_PLACEHOLDER`)"
+      - "traefik.http.routers.waha.tls.certresolver=leresolver"
+      - "traefik.http.services.waha.loadbalancer.server.port=3000"
+    networks:
+      - default
+
+networks:
+  default:
+    external: true
+    name: traefik 
